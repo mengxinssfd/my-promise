@@ -1,7 +1,7 @@
 const path = require("path");
 const config = {
     entry: {
-        stateMachine: "./src/index.test.ts",
+        myPromise: "./src/index.test.ts",
     },
     output: {
         path: path.resolve(__dirname, "dist"),

@@ -1,1 +1,1 @@
-#使用typescript实现promise
+# 使用typescript实现promise

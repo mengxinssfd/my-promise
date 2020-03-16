@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlPlugin = require("html-webpack-plugin");
 const config = {
     entry: {
-        stateMachine: "./src/dev.ts",
+        myPromise: "./src/dev.ts",
     },
     output: {
         path: path.resolve(__dirname, "dist"),
