@@ -23,7 +23,7 @@ const config = {
         new HtmlPlugin({
             template: './index.html',
             filename: 'index.html',
-            chunks: ['stateMachine'],// 于loader一样，在后面的会插到前面去
+            chunks: ['myPromise'],// 于loader一样，在后面的会插到前面去
         })
     ]
 };

@@ -1,7 +1,8 @@
 import MyPromise from "./index";
-import MyPromise2 from "./other";
+// import MyPromise2 from "./other";
+// import microTask from "./microtask";
 
-const p = new Promise<number>((res, rej) => {
+/*const p = new Promise<number>((res, rej) => {
     res();
 });
 p.then(value => {
@@ -61,11 +62,14 @@ Promise.race([p1, p2, p3]).then(value => {
 const mp111 = new MyPromise<number>(res => setTimeout(() => res(1), 500));
 const mp121 = new MyPromise<number>(res => setTimeout(() => res(2), 100));
 // const mp13 = new MyPromise<number>(res => res(3));
-MyPromise.all([mp111, mp121, "123"]).then(value => {
+MyPromise.all([mp111, mp121, "true", true, null, undefined, {a: 123}, function () {
+
+}]).then(value => {
     console.log("mp all", value);
 }).catch(reason => console.log(reason));
 
-MyPromise.all([]).then(value => console.log("empty", value));
+
+MyPromise.all([]);//.then(value => console.log("empty", value));
 
 const p11 = new Promise<number>(res => setTimeout(() => res(1), 500));
 const p21 = new Promise<number>(res => setTimeout(() => res(2), 100));
@@ -87,4 +91,42 @@ MyPromise.reject("MyPromise reject 1").finally(() => {
 MyPromise.reject("MyPromise reject 2").catch(() => {
 }).finally(() => {
     console.log("MyPromise finally  2");
+});
+
+setTimeout(function () {
+    console.log("task", "timeout");
+});
+console.log(microTask(function () {
+    console.log("task", "microtask");
+}));
+console.log("task", "start");*/
+/*new Promise(res => {
+    console.log("promise1");
+    res();
+}).then(() => {
+    new Promise(r => {
+        r();
+    }).then(() => {
+        console.log("then 2-1");
+    }).then(() => {
+        console.log("then2-2");
+    });
+}).then(() => {
+    console.log("then12");
+});*/
+new MyPromise(res => {
+    console.log("MyPromise1");
+    res();
+}).then(() => {
+    console.log("then 1-1");
+    new MyPromise(r => {
+        console.log("MyPromise2");
+        r();
+    }).then(() => {
+        console.log("then 2-1");
+    }).then(() => {
+        console.log("then 2-2");
+    });
+}).then(() => {
+    console.log("then 1-2");
 });

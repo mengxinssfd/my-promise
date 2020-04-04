@@ -128,6 +128,7 @@ test("private reject", async function () {
 
     // rejected then  // 值是第一次赋的值
     mp1.then(null, value => mpv4 = value);
+
     await sleep(10);
     expect(mpv4).toBe("test");
 
