@@ -1,7 +1,7 @@
 const path = require("path");
 const config = {
     entry: {
-        myPromise: "./src/index.test.ts",
+        myPromise: "./src/index.ts",
     },
     output: {
         path: path.resolve(__dirname, "dist"),

@@ -23,7 +23,6 @@ export default class MyPromise<T = void> implements PromiseLike<T> {
     private value: T;
     private fulfillList: ((value: T) => void)[] = [];
     private rejectList: ((reason: any) => void)[] = [];
-    private finallyList: any[] = []; // 从fulfill和reject里摘出来
 
     public constructor(executor: (resolve: Resolve<T>, reject: Reject) => void) {
         this.id = id++;
@@ -47,8 +46,8 @@ export default class MyPromise<T = void> implements PromiseLike<T> {
             };
             const list = lists[status];
             runCallback(list, value);
-            // 最后调用finally
-            runCallback(this.finallyList, value);
+            // 最后调用finally  // finally不是最后执行的 与then同级 如果finally在then前，先执行finally
+            // runCallback(this.finallyList, value);
         };
         const resolve: Resolve<T> = (value) => {
             const onThen = (status: State) => {
@@ -139,25 +138,14 @@ export default class MyPromise<T = void> implements PromiseLike<T> {
 
     // finally(onfinally?: (() => void) | undefined | null): Promise<T>
     public finally(onFinally?: (() => void) | undefined | null): MyPromise<T> {
-        const status = this.status;
-        const value = this.value;
-        // return this.then(handler, handler); // MyPromise.reject().finally() 不会抛异常
-        return new MyPromise<T>((resolve, reject) => {
-            const handler = (value: T) => {
-                if (typeof onFinally === "function") onFinally();
-                resolve(value);
-            };
-            switch (status) {
-                // 当状态为pending时，将then方法回调函数加入执行队列等待执行
-                case State.padding:
-                    this.finallyList.push(handler);
-                    break;
-                // 当状态已经改变时，立即执行对应的回调函数
-                case State.fulfilled:
-                case State.rejected:
-                    handler(value);
-                    break;
-            }
+        return this.then((v) => {
+            onFinally && onFinally();
+            return v;
+        }, (reason) => {
+            onFinally && onFinally();
+            // 因为MyPromise.reject().finally();添加到了rejectList里面所以不会抛异常
+            // 只能在此处再次抛异常
+            throw "(in MyPromise id:" + this.id + ") " + reason;
         });
     }
 

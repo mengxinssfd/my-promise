@@ -251,6 +251,60 @@ test("catch and finally", async function () {
     await sleep(50);
     expect(values["Promise.reject.catch.then"]).toBe("finally");
 });
+test("finally", async function () {
+    let s1 = "";
+    let s2 = "";
+    let fc1 = "";
+    let fc2 = "";
+    const p = new Promise((res) => {
+        setTimeout(res, 20);
+    });
+    p.finally(() => {
+        s1 += "f1";
+    }).then((v) => {
+        s1 += "ft1";
+    });
+    p.then(() => {
+        s1 += "t1";
+    });
+    p.finally(() => {
+        s1 += "f2";
+    });
+
+    const myP = new MyPromise((res) => {
+        setTimeout(res, 20);
+    });
+    myP.finally(() => {
+        s2 += "f1";
+    }).then((v) => {
+        s2 += "ft1";
+    });
+    myP.then(() => {
+        s2 += "t1";
+    });
+    myP.finally(() => {
+        s2 += "f2";
+    });
+
+    Promise.reject("error").finally(() => {
+        fc1 = "f";
+    }).catch((e) => {
+        fc1 += " error";
+    });
+    MyPromise.reject("error").finally(() => {
+        fc2 = "f";
+    }).catch((e) => {
+        fc2 += " error";
+    });
+
+    await sleep(50);
+
+    const result = "f1t1f2ft1";
+    expect(s1).toBe(result);
+    expect(s2).toBe(result);
+    expect(fc1).toBe("f error");
+    expect(fc2).toBe("f error");
+});
 test("race", async function () {
     let result1 = "test1";
     let result2 = "test2";
